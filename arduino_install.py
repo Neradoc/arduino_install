@@ -3,9 +3,15 @@ import argparse, os, re, subprocess, glob, datetime, sys, shutil
 import usb
 import serial.tools.list_ports
 
-tmpFiles= "/tmp/arduinotmp"
-logFile = "/Users/spyro/Developement/ArduinoLib/ArduinoInstall.log"
+tmpFiles = None # "/tmp/arduino_install/"
+logFile  = None # "/var/log/arduino_install.log"
 arduinoCommand = ['arduino-cli',"compile"]
+
+# override configuration constants with config.py
+try:
+	from config import *
+except:
+	pass
 
 RED = '\033[91m'
 GREEN = '\033[92m'
@@ -351,7 +357,7 @@ hasBuildDir = os.path.exists(buildDir)
 # create the command
 command = arduinoCommand
 # keep temporary files in a normal session
-if os.path.exists(os.path.dirname(tmpFiles)):
+if tmpFiles and os.path.exists(os.path.dirname(tmpFiles)):
 	if not os.path.exists(tmpFiles):
 		os.mkdir(tmpFiles)
 	command += [
